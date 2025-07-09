@@ -1,18 +1,16 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SUPERMALL</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div id="preloader">Loading SUPERMALL...</div>
-  
   <div id="app" class="hidden">
     <header>
       <h1>SUPERMALL 🛍️</h1>
@@ -26,12 +24,18 @@
       <button id="logoutBtn">Logout</button>
     </header>
 
+    <div id="admin-panel" class="hidden">
+      <h2>Add New Product (Admin)</h2>
+      <input type="text" id="product-name" placeholder="Product name" />
+      <input type="text" id="product-price" placeholder="Price (₦)" />
+      <input type="text" id="product-image" placeholder="Image URL" />
+      <button id="addProductBtn">Add Product</button>
+    </div>
+
     <section id="products">
       <!-- Products will be rendered here -->
     </section>
   </div>
-
-  <!-- Link your correct script file here -->
   <script src="script.js"></script>
 </body>
 </html>
