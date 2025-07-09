@@ -1,121 +1,97 @@
-// Initialize Firebase
+// Firebase CDN Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js";
+
+// ✅ Your Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDVQGzLaKOynQKfqGc_iQaMwwbECQKcZ_8",
-  authDomain: "supermall-d9b6d.firebaseapp.com",
-  projectId: "supermall-d9b6d",
-  storageBucket: "supermall-d9b6d.appspot.com",
-  messagingSenderId: "888184909849",
-  appId: "1:888184909849:web:7656fe0e22a181ae2c3b14"
+  apiKey: "AIzaSyB_L3nmDeO6eyLzSYhMpRPzKqzXvqUBhNA",
+  authDomain: "supermall-94068.firebaseapp.com",
+  projectId: "supermall-94068",
+  storageBucket: "supermall-94068.appspot.com",
+  messagingSenderId: "164670474540",
+  appId: "1:164670474540:web:73ef4263c3b3eb18459fbe",
+  measurementId: "G-KF0WFLD2D3"
 };
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-const ADMIN_EMAIL = "leoabhuimen1@gmail.com";
+// DOM Elements
+const logoutBtn = document.getElementById("logoutBtn");
+const darkToggle = document.getElementById("darkToggle");
+const loginLink = document.getElementById("loginLink");
+const productsSection = document.getElementById("products");
+const appDiv = document.getElementById("app");
+const preloader = document.getElementById("preloader");
 
-const preloader = document.getElementById('preloader');
-const app = document.getElementById('app');
-const logoutBtn = document.getElementById('logoutBtn');
-const darkToggle = document.getElementById('darkToggle');
-const loginLink = document.getElementById('loginLink');
-const productsSection = document.getElementById('products');
-
-// Show loader then content
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    preloader.classList.add("hidden");
-    app.classList.remove("hidden");
-  }, 1200);
-});
-
-// Dark mode toggle
+// 🌙 Dark Mode Toggle
 darkToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
 });
 
-// Logout button
-logoutBtn.addEventListener("click", () => {
-  auth.signOut().then(() => {
-    alert("Logged out!");
-    location.reload();
-  });
-});
-
-// Monitor user auth state
-auth.onAuthStateChanged(user => {
+// 🔒 Auth Status
+onAuthStateChanged(auth, user => {
   if (user) {
-    if (user.email === ADMIN_EMAIL) {
-      showAdminPanel();
-    }
-    loginLink.style.display = "none";
+    loginLink.textContent = `Hello, ${user.email}`;
     logoutBtn.style.display = "inline-block";
+
+    if (user.email === "leoabhuimen1@gmail.com") {
+      const adminLink = document.createElement("a");
+      adminLink.href = "admin.html";
+      adminLink.textContent = "⚙️ Admin";
+      document.querySelector("nav").appendChild(adminLink);
+    }
+
+    renderProducts();
   } else {
-    loginLink.style.display = "inline-block";
     logoutBtn.style.display = "none";
+    renderProducts();
   }
+
+  // Show content after auth check
+  preloader.style.display = "none";
+  appDiv.classList.remove("hidden");
 });
 
-// Display products
-function displayProducts() {
-  db.collection("products").get().then(snapshot => {
-    productsSection.innerHTML = "";
-    snapshot.forEach(doc => {
-      const product = doc.data();
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.innerHTML = `
-        <img src="${product.image}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <strong>₦${product.price}</strong><br>
-        <button onclick="addToCart('${doc.id}')">Add to Cart</button>
-      `;
-      productsSection.appendChild(card);
-    });
+// 🔓 Logout
+logoutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => location.reload());
+});
+
+// 🛒 Render Products
+async function renderProducts() {
+  productsSection.innerHTML = "";
+  const querySnapshot = await getDocs(collection(db, "products"));
+  querySnapshot.forEach(doc => {
+    const product = doc.data();
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${product.image}" alt="${product.name}" />
+      <h3>${product.name}</h3>
+      <p>₦${product.price}</p>
+      <button onclick="addToCart('${doc.id}', '${product.name}', ${product.price})">Add to Cart</button>
+    `;
+    productsSection.appendChild(card);
   });
 }
 
-displayProducts();
-
-// Add to cart (basic implementation)
-function addToCart(productId) {
-  alert(`Added product ${productId} to cart! (Feature coming soon)`);
-}
-
-// Admin panel
-function showAdminPanel() {
-  const adminPanel = document.createElement("div");
-  adminPanel.id = "admin-panel";
-  adminPanel.innerHTML = `
-    <h2>Admin Panel - Add Product</h2>
-    <input type="text" id="prodName" placeholder="Product Name">
-    <input type="text" id="prodDesc" placeholder="Description"><br>
-    <input type="text" id="prodImage" placeholder="Image URL">
-    <input type="number" id="prodPrice" placeholder="Price"><br>
-    <button onclick="addProduct()">Add Product</button>
-  `;
-  app.insertBefore(adminPanel, productsSection);
-}
-
-function addProduct() {
-  const name = document.getElementById("prodName").value;
-  const description = document.getElementById("prodDesc").value;
-  const image = document.getElementById("prodImage").value;
-  const price = parseFloat(document.getElementById("prodPrice").value);
-
-  if (!name || !description || !image || !price) {
-    alert("Fill all fields.");
-    return;
-  }
-
-  db.collection("products").add({
-    name, description, image, price
-  }).then(() => {
-    alert("Product added!");
-    displayProducts();
-  }).catch(err => {
-    console.error(err);
-    alert("Error adding product.");
-  });
-}
+// 🛒 Add to Cart (stored in localStorage)
+window.addToCart = function (id, name, price) {
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  cart.push({ id, name, price });
+  localStorage.setItem("cart", JSON.stringify(cart));
+  alert(`${name} added to cart 🛒`);
+};
