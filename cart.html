@@ -3,36 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Your Cart - SUPERMALL</title>
+  <title>Cart - SUPERMALL 🛒</title>
   <link rel="stylesheet" href="style.css" />
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div id="preloader">Loading SUPERMALL...</div>
-  <div id="app" class="hidden">
-    <header>
-      <h1>SUPERMALL 🛍️</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="cart.html">🛒 Cart</a>
-        <a href="login.html">Login</a>
-        <a href="signup.html">Signup</a>
-      </nav>
-    </header>
+  <header>
+    <h1>🛒 Your Cart - SUPERMALL</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
 
-    <section id="cart" style="padding: 2rem;">
-      <h2>Your Shopping Cart 🛒</h2>
-      <div id="cartItems"></div>
+  <section class="cart-section">
+    <div id="cartItems"></div>
+    <h3 id="totalPrice">Total: ₦0</h3>
+    <button onclick="checkout()">Proceed to Checkout</button>
+  </section>
 
-      <div id="cartTotal" style="margin-top: 1rem; font-weight: bold;"></div>
+  <script>
+    function loadCart() {
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      const cartContainer = document.getElementById("cartItems");
+      const totalPriceTag = document.getElementById("totalPrice");
 
-      <button id="checkoutBtn" style="margin-top: 1rem;">Checkout</button>
-      <p id="cartMessage" style="margin-top: 1rem;"></p>
-    </section>
-  </div>
+      if (cartItems.length === 0) {
+        cartContainer.innerHTML = "<p>Your cart is empty.</p>";
+        totalPriceTag.textContent = "Total: ₦0";
+        return;
+      }
 
-  <script src="script.js"></script>
+      let total = 0;
+      cartContainer.innerHTML = cartItems.map((item, index) => {
+        total += item.price;
+        return `
+          <div class="cart-item">
+            <img src="${item.image}" alt="${item.name}" />
+            <div>
+              <h4>${item.name}</h4>
+              <p>₦${item.price}</p>
+              <button onclick="removeFromCart(${index})">Remove</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      totalPriceTag.textContent = `Total: ₦${total}`;
+    }
+
+    function removeFromCart(index) {
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      cartItems.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      loadCart();
+    }
+
+    function checkout() {
+      alert("Checkout not yet implemented 🚧");
+    }
+
+    window.onload = loadCart;
+  </script>
 </body>
 </html>
