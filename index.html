@@ -1,31 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
+<!-- index.html --><!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SUPERMALL 🛒</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SUPERMALL</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
   <div id="preloader">Loading SUPERMALL...</div>
+  <div id="app" class="hidden">
+    <header>
+      <h1>SUPERMALL 🛍️</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="cart.html">🛒 Cart</a>
+        <a href="login.html" id="loginLink">Login</a>
+        <a href="signup.html">Signup</a>
+      </nav>
+      <button id="darkToggle">🌓</button>
+      <button id="logoutBtn">Logout</button>
+    </header><section id="products">
+  <!-- Products will be rendered here -->
+</section>
 
-  <header>
-    <h1>SUPERMALL</h1>
-    <button id="themeToggle">🌗</button>
-    <nav>
-      <button onclick="viewCart()">🛒 Cart</button>
-      <button onclick="logout()">Logout</button>
-    </nav>
-  </header>
-
-  <main id="products"></main>
-
-  <footer>© 2025 SUPERMALL</footer>
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
-  <script src="https://checkout.flutterwave.com/v3.js"></script>
-  <script src="main.js"></script>
-</body>
+  </div>  <script src="main.js"></script></body>
 </html>
