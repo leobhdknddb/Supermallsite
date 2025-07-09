@@ -1,78 +1,33 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyD6yXrVhkfsC4bwdGj_uqwDbTyb7__JCtg",
-  authDomain: "supermall-d5f99.firebaseapp.com",
-  projectId: "supermall-d5f99",
-  storageBucket: "supermall-d5f99.appspot.com",
-  messagingSenderId: "813248774705",
-  appId: "1:813248774705:web:6978e2c6a4aee3fa180b10"
-};
+// script.js
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
+// Firebase config (already initialized in HTML) const firebaseConfig = { apiKey: "AIzaSyD6yXrVhkfsC4bwdGj_uqwDbTyb7__JCtg", authDomain: "supermall-d5f99.firebaseapp.com", projectId: "supermall-d5f99", storageBucket: "supermall-d5f99.appspot.com", messagingSenderId: "813248774705", appId: "1:813248774705:web:6978e2c6a4aee3fa180b10", measurementId: "G-D5PRDT1E9L" };
 
-const ADMIN_EMAIL = "leoabhuimen1@gmail.com";
+// Initialize Firebase firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const db = firebase.firestore();
 
-window.onload = () => {
-  document.getElementById("preloader").style.display = "none";
-  document.getElementById("themeToggle").onclick = () => {
-    document.body.classList.toggle("dark");
-  };
-  auth.onAuthStateChanged(user => {
-    if (user) {
-      loadProducts();
-      if (user.email === ADMIN_EMAIL) {
-        alert("Welcome Admin!");
-      }
-    } else {
-      loginPrompt();
-    }
-  });
-};
+// UI Logic window.addEventListener("load", () => { document.getElementById("preloader").style.display = "none"; document.getElementById("app").classList.remove("hidden"); });
 
-function loginPrompt() {
-  const email = prompt("Enter your email:");
-  const password = prompt("Enter your password:");
-  auth.signInWithEmailAndPassword(email, password).catch(err => alert(err.message));
-}
+// Dark Mode Toggle const darkToggle = document.getElementById("darkToggle"); darkToggle.addEventListener("click", () => { document.body.classList.toggle("dark-mode"); });
 
-function logout() {
-  auth.signOut().then(() => location.reload());
-}
+// Logout Button const logoutBtn = document.getElementById("logoutBtn"); logoutBtn.addEventListener("click", () => { auth.signOut().then(() => { window.location.href = "login.html"; }); });
 
-function loadProducts() {
-  const products = [
-    { id: 1, name: "Facebook Account", price: 1000 },
-    { id: 2, name: "Instagram Account", price: 1500 }
-  ];
-  const container = document.getElementById("products");
-  container.innerHTML = products.map(p => `
-    <div class="product">
-      <h3>${p.name}</h3>
-      <p>₦${p.price}</p>
-      <button onclick='buy(${JSON.stringify(p)})'>Buy Now</button>
-    </div>
-  `).join("");
-}
+// Product Rendering const productsSection = document.getElementById("products");
 
-function buy(product) {
-  FlutterwaveCheckout({
-    public_key: "FLWPUBK_TEST-xxxxxxxxxxxxxxxxxxxxx-X",
-    tx_ref: Date.now(),
-    amount: product.price,
-    currency: "NGN",
-    payment_options: "card,ussd",
-    customer: {
-      email: firebase.auth().currentUser.email
-    },
-    callback: function (data) {
-      alert("Payment complete!");
-    },
-    onclose: function () {
-      alert("Payment closed");
-    }
-  });
-}
+const renderProducts = async () => { try { const snapshot = await db.collection("products").get(); productsSection.innerHTML = ""; snapshot.forEach((doc) => { const product = doc.data(); productsSection.innerHTML += <div class="product"> <img src="${product.image}" alt="${product.name}" /> <h3>${product.name}</h3> <p>${product.description}</p> <p><strong>$${product.price}</strong></p> <button onclick="addToCart('${doc.id}')">Add to Cart</button> </div>; }); } catch (error) { productsSection.innerHTML = "<p>Failed to load products.</p>"; } };
 
-function viewCart() {
-  alert("Cart coming soon!");
-}
+renderProducts();
+
+// Add to Cart Function const addToCart = async (productId) => { const user = auth.currentUser; if (!user) { alert("Please log in to add items to cart."); return; }
+
+try { const productRef = db.collection("products").doc(productId); const productSnap = await productRef.get(); const cartRef = db.collection("carts").doc(user.uid);
+
+await cartRef.set({
+  items: firebase.firestore.FieldValue.arrayUnion({
+    id: productId,
+    ...productSnap.data(),
+  })
+}, { merge: true });
+
+alert("Product added to cart.");
+
+} catch (err) { console.error("Cart error:", err); alert("Failed to add to cart."); } };
+
