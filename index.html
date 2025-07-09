@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SUPERMALL</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-storage.js"></script>
 </head>
 <body>
   <div id="preloader">Loading SUPERMALL...</div>
@@ -17,6 +18,7 @@
       <nav>
         <a href="index.html">Home</a>
         <a href="cart.html">🛒 Cart</a>
+        <a href="admin.html">Admin</a>
         <a href="login.html" id="loginLink">Login</a>
         <a href="signup.html">Signup</a>
       </nav>
@@ -24,18 +26,11 @@
       <button id="logoutBtn">Logout</button>
     </header>
 
-    <div id="admin-panel" class="hidden">
-      <h2>Add New Product (Admin)</h2>
-      <input type="text" id="product-name" placeholder="Product name" />
-      <input type="text" id="product-price" placeholder="Price (₦)" />
-      <input type="text" id="product-image" placeholder="Image URL" />
-      <button id="addProductBtn">Add Product</button>
-    </div>
-
     <section id="products">
-      <!-- Products will be rendered here -->
+      <!-- Products will be loaded here -->
     </section>
   </div>
-  <script src="script.js"></script>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
