@@ -1,48 +1,39 @@
-<!-- admin.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard - SUPERMALL</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>SUPERMALL Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div id="preloader">Loading Admin Panel...</div>
-  <div id="app" class="hidden">
-    <header>
-      <h1>SUPERMALL Admin Dashboard 🛠️</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="cart.html">🛒 Cart</a>
-        <a href="login.html" id="loginLink">Login</a>
-        <a href="signup.html">Signup</a>
-        <button id="logoutBtn">Logout</button>
-      </nav>
-    </header>
+  <header>
+    <h1>Admin Dashboard 🛠️</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+      <a href="login.html">Login</a>
+    </nav>
+    <button id="darkToggle">🌓</button>
+    <button id="logoutBtn">Logout</button>
+  </header>
 
-    <main>
-      <section>
-        <h2>Add New Product</h2>
-        <form id="addProductForm">
-          <input type="text" id="productName" placeholder="Product Name" required />
-          <input type="text" id="productImage" placeholder="Image URL" required />
-          <input type="number" id="productPrice" placeholder="Price" required />
-          <textarea id="productDesc" placeholder="Product Description"></textarea>
-          <button type="submit">Add Product</button>
-        </form>
-      </section>
+  <section id="adminPanel">
+    <h2>📦 Add New Product</h2>
+    <form id="addProductForm">
+      <input type="text" id="productName" placeholder="Product Name" required>
+      <input type="text" id="productPrice" placeholder="Price" required>
+      <input type="text" id="productImage" placeholder="Image URL" required>
+      <button type="submit">Add Product</button>
+    </form>
 
-      <section>
-        <h2>Current Products</h2>
-        <div id="productList"></div>
-      </section>
-    </main>
-  </div>
+    <h2>🗂️ All Products</h2>
+    <ul id="productList"></ul>
+  </section>
 
-  <script src="admin.js"></script>
+  <script type="module" src="script.js"></script>
 </body>
 </html>
