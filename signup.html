@@ -3,40 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sign Up - SUPERMALL</title>
+  <title>Signup - SUPERMALL</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <div id="preloader">Loading SUPERMALL...</div>
-  <div id="app" class="hidden">
-    <header>
-      <h1>SUPERMALL 🛍️</h1>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="cart.html">🛒 Cart</a>
-        <a href="login.html">Login</a>
-        <a href="signup.html">Signup</a>
-      </nav>
-    </header>
-
-    <section style="padding: 2rem;">
-      <h2>Create Account</h2>
-      <form id="signupForm" style="max-width: 400px;">
-        <label>Email:</label><br />
-        <input type="email" id="signupEmail" required /><br /><br />
-
-        <label>Password:</label><br />
-        <input type="password" id="signupPassword" required /><br /><br />
-
-        <button type="submit">Sign Up</button>
-      </form>
-      <p id="signupMessage" style="margin-top: 1rem;"></p>
-    </section>
+  <div class="auth-container">
+    <h2>Create a SUPERMALL Account 🛍️</h2>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="signup()">Signup</button>
+    <p>Already have an account? <a href="login.html">Login</a></p>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVQGzLaKOynQKfqGc_iQaMwwbECQKcZ_8",
+      authDomain: "supermall-d9b6d.firebaseapp.com",
+      projectId: "supermall-d9b6d",
+      storageBucket: "supermall-d9b6d.appspot.com",
+      messagingSenderId: "888184909849",
+      appId: "1:888184909849:web:7656fe0e22a181ae2c3b14"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function signup() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      auth.createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          alert("Signup successful!");
+          window.location.href = "index.html";
+        })
+        .catch(error => {
+          alert("Signup failed: " + error.message);
+        });
+    }
+  </script>
 </body>
 </html>
