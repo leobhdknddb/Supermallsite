@@ -3,62 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SUPERMALL</title>
+  <title>SUPERMALL 🛒</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico">
-  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body onload="showPage()">
-  <div id="preloader">
+<body>
+  <div id="preloader">Loading SUPERMALL...</div>
+
+  <header>
     <h1>SUPERMALL</h1>
-    <div class="loader"></div>
-  </div>
-  <div id="mainContent" style="display:none;">
-    <header>
-      <div class="logo">SUPERMALL</div>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="cart.html">Cart</a>
-        <a href="login.html">Login</a>
-        <a href="signup.html">Signup</a>
-        <button id="themeToggle">🌓</button>
-      </nav>
-    </header>
-    <section class="hero">
-      <h1>Welcome to <span>SUPERMALL</span></h1>
-      <p>Your one-stop shop for premium social and gaming accounts.</p>
-      <a href="cart.html" class="btn">View Cart</a>
-    </section>
-    <section class="products">
-      <h2>🔥 Trending Accounts</h2>
-      <div class="product-grid">
-        <div class="card">
-          <img src="https://via.placeholder.com/150" alt="Instagram Pro">
-          <h3>Instagram Pro</h3>
-          <p>Verified + Aged</p>
-          <span>$19.99</span>
-          <button onclick="addToCart('Instagram Pro', 19.99)">Add to Cart</button>
-        </div>
-        <div class="card">
-          <img src="https://via.placeholder.com/150" alt="Gaming Bundle">
-          <h3>Gaming Bundle</h3>
-          <p>COD • PUBG • Free Fire</p>
-          <span>$29.99</span>
-          <button onclick="addToCart('Gaming Bundle', 29.99)">Add to Cart</button>
-        </div>
-        <div class="card">
-          <img src="https://via.placeholder.com/150" alt="TikTok Influencer">
-          <h3>TikTok Influencer</h3>
-          <p>High engagement</p>
-          <span>$24.99</span>
-          <button onclick="addToCart('TikTok Influencer', 24.99)">Add to Cart</button>
-        </div>
-      </div>
-    </section>
-    <footer>
-      <p>&copy; 2025 SUPERMALL. All rights reserved.</p>
-    </footer>
-  </div>
-  <script src="script.js"></script>
+    <button id="themeToggle">🌗</button>
+    <nav>
+      <button onclick="viewCart()">🛒 Cart</button>
+      <button onclick="logout()">Logout</button>
+    </nav>
+  </header>
+
+  <main id="products"></main>
+
+  <footer>© 2025 SUPERMALL</footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+  <script src="https://checkout.flutterwave.com/v3.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
