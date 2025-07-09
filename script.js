@@ -1,33 +1,121 @@
-// script.js
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDVQGzLaKOynQKfqGc_iQaMwwbECQKcZ_8",
+  authDomain: "supermall-d9b6d.firebaseapp.com",
+  projectId: "supermall-d9b6d",
+  storageBucket: "supermall-d9b6d.appspot.com",
+  messagingSenderId: "888184909849",
+  appId: "1:888184909849:web:7656fe0e22a181ae2c3b14"
+};
 
-// Firebase config (already initialized in HTML) const firebaseConfig = { apiKey: "AIzaSyD6yXrVhkfsC4bwdGj_uqwDbTyb7__JCtg", authDomain: "supermall-d5f99.firebaseapp.com", projectId: "supermall-d5f99", storageBucket: "supermall-d5f99.appspot.com", messagingSenderId: "813248774705", appId: "1:813248774705:web:6978e2c6a4aee3fa180b10", measurementId: "G-D5PRDT1E9L" };
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
 
-// Initialize Firebase firebase.initializeApp(firebaseConfig); const auth = firebase.auth(); const db = firebase.firestore();
+const ADMIN_EMAIL = "leoabhuimen1@gmail.com";
 
-// UI Logic window.addEventListener("load", () => { document.getElementById("preloader").style.display = "none"; document.getElementById("app").classList.remove("hidden"); });
+const preloader = document.getElementById('preloader');
+const app = document.getElementById('app');
+const logoutBtn = document.getElementById('logoutBtn');
+const darkToggle = document.getElementById('darkToggle');
+const loginLink = document.getElementById('loginLink');
+const productsSection = document.getElementById('products');
 
-// Dark Mode Toggle const darkToggle = document.getElementById("darkToggle"); darkToggle.addEventListener("click", () => { document.body.classList.toggle("dark-mode"); });
+// Show loader then content
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    preloader.classList.add("hidden");
+    app.classList.remove("hidden");
+  }, 1200);
+});
 
-// Logout Button const logoutBtn = document.getElementById("logoutBtn"); logoutBtn.addEventListener("click", () => { auth.signOut().then(() => { window.location.href = "login.html"; }); });
+// Dark mode toggle
+darkToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+});
 
-// Product Rendering const productsSection = document.getElementById("products");
+// Logout button
+logoutBtn.addEventListener("click", () => {
+  auth.signOut().then(() => {
+    alert("Logged out!");
+    location.reload();
+  });
+});
 
-const renderProducts = async () => { try { const snapshot = await db.collection("products").get(); productsSection.innerHTML = ""; snapshot.forEach((doc) => { const product = doc.data(); productsSection.innerHTML += <div class="product"> <img src="${product.image}" alt="${product.name}" /> <h3>${product.name}</h3> <p>${product.description}</p> <p><strong>$${product.price}</strong></p> <button onclick="addToCart('${doc.id}')">Add to Cart</button> </div>; }); } catch (error) { productsSection.innerHTML = "<p>Failed to load products.</p>"; } };
+// Monitor user auth state
+auth.onAuthStateChanged(user => {
+  if (user) {
+    if (user.email === ADMIN_EMAIL) {
+      showAdminPanel();
+    }
+    loginLink.style.display = "none";
+    logoutBtn.style.display = "inline-block";
+  } else {
+    loginLink.style.display = "inline-block";
+    logoutBtn.style.display = "none";
+  }
+});
 
-renderProducts();
+// Display products
+function displayProducts() {
+  db.collection("products").get().then(snapshot => {
+    productsSection.innerHTML = "";
+    snapshot.forEach(doc => {
+      const product = doc.data();
+      const card = document.createElement("div");
+      card.className = "product-card";
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <strong>₦${product.price}</strong><br>
+        <button onclick="addToCart('${doc.id}')">Add to Cart</button>
+      `;
+      productsSection.appendChild(card);
+    });
+  });
+}
 
-// Add to Cart Function const addToCart = async (productId) => { const user = auth.currentUser; if (!user) { alert("Please log in to add items to cart."); return; }
+displayProducts();
 
-try { const productRef = db.collection("products").doc(productId); const productSnap = await productRef.get(); const cartRef = db.collection("carts").doc(user.uid);
+// Add to cart (basic implementation)
+function addToCart(productId) {
+  alert(`Added product ${productId} to cart! (Feature coming soon)`);
+}
 
-await cartRef.set({
-  items: firebase.firestore.FieldValue.arrayUnion({
-    id: productId,
-    ...productSnap.data(),
-  })
-}, { merge: true });
+// Admin panel
+function showAdminPanel() {
+  const adminPanel = document.createElement("div");
+  adminPanel.id = "admin-panel";
+  adminPanel.innerHTML = `
+    <h2>Admin Panel - Add Product</h2>
+    <input type="text" id="prodName" placeholder="Product Name">
+    <input type="text" id="prodDesc" placeholder="Description"><br>
+    <input type="text" id="prodImage" placeholder="Image URL">
+    <input type="number" id="prodPrice" placeholder="Price"><br>
+    <button onclick="addProduct()">Add Product</button>
+  `;
+  app.insertBefore(adminPanel, productsSection);
+}
 
-alert("Product added to cart.");
+function addProduct() {
+  const name = document.getElementById("prodName").value;
+  const description = document.getElementById("prodDesc").value;
+  const image = document.getElementById("prodImage").value;
+  const price = parseFloat(document.getElementById("prodPrice").value);
 
-} catch (err) { console.error("Cart error:", err); alert("Failed to add to cart."); } };
+  if (!name || !description || !image || !price) {
+    alert("Fill all fields.");
+    return;
+  }
 
+  db.collection("products").add({
+    name, description, image, price
+  }).then(() => {
+    alert("Product added!");
+    displayProducts();
+  }).catch(err => {
+    console.error(err);
+    alert("Error adding product.");
+  });
+}
