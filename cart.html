@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cart - SUPERMALL</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Your Cart - SUPERMALL</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
 </head>
 <body>
-  <header>
-    <div class="logo">SUPERMALL</div>
-    <nav>
-      <a href="index.html">Home</a>
-    </nav>
-  </header>
-  <section class="cart">
-    <h2>Your Cart</h2>
-    <ul id="cartItems"></ul>
-    <p>Total: $<span id="cartTotal">0.00</span></p>
-  </section>
+  <div id="preloader">Loading SUPERMALL...</div>
+  <div id="app" class="hidden">
+    <header>
+      <h1>SUPERMALL 🛍️</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="cart.html">🛒 Cart</a>
+        <a href="login.html">Login</a>
+        <a href="signup.html">Signup</a>
+      </nav>
+    </header>
+
+    <section id="cart" style="padding: 2rem;">
+      <h2>Your Shopping Cart 🛒</h2>
+      <div id="cartItems"></div>
+
+      <div id="cartTotal" style="margin-top: 1rem; font-weight: bold;"></div>
+
+      <button id="checkoutBtn" style="margin-top: 1rem;">Checkout</button>
+      <p id="cartMessage" style="margin-top: 1rem;"></p>
+    </section>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
