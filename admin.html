@@ -1,0 +1,26 @@
+<!-- admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SUPERMALL Admin</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.24.0/firebase-firestore.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>🛠️ SUPERMALL Admin Dashboard</h1>
+    <form id="productForm">
+      <input type="text" id="productName" placeholder="Product Name" required />
+      <input type="text" id="productImage" placeholder="Image URL" required />
+      <input type="number" id="productPrice" placeholder="Price" required />
+      <button type="submit">➕ Add Product</button>
+    </form>
+    <p id="statusMessage"></p>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
